@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/dashboard-main.css">
+    <link rel="stylesheet" href="/public/css/root.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="nav-wrapper">
+            <div class="welcome-container">
+                <h1 class="header-text">
+                    Welcome Back
+                </h1>
+            </div>
+            <div class="nav-list">
+                <div class="nav-child">
+                    <div class="btn-contain">
+                        <button id="btn1" class="btn" data-redirect="/dashboard/help">Help</button>
+                    </div>
+                </div>
+                <div class="nav-child">
+                    <div class="btn-contain">
+                        <button id="btn2" class="btn" data-redirect="/logout">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content-wrapper">
+            <div class="dashboard-mainmenu">
+                <ul class="dashboard-main-list">
+                    <li class="dashboard-main-list-item btn" data-redirect="/dashboard/portraits">Edit
+                        Portraits</li>
+                    <li class="dashboard-main-list-item btn" data-redirect="/dashboard/products">Edit
+                        Products</li>
+                    <li class="dashboard-main-list-item btn" data-redirect="#">Website Analytics</li>
+                    <li class="dashboard-main-list-item btn" data-redirect="#">Dashboard Help</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.btn').click(function () {
+                var redirectUrl = $(this).data('redirect');
+                window.location.href = redirectUrl;
+            });
+        });
+    </script>
+</body>
+
+</html>

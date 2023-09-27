@@ -1,0 +1,42 @@
+<!-- navbar.ejs -->
+
+<head>
+  <link rel="stylesheet" href="/public/css/nav.css">
+</head>
+<div id="nav-wrapper">
+  <div id="mobile" class="mobile-nav-container">
+    <ul class="nav-list-mobile">
+      <li><a href="/">Home</a></li>
+      <li><a href="/portraits">Portraits</a></li>
+      <li><a href="/prodcuts">Products</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </div>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo-container">
+        <a class="nav-logo-anchor " href="/"><img class="nav-logo" src="/public/assets/logo.png" alt="logo"></a>
+      </div>
+    </div>
+    <div id="mobile-controls" class="nav-container">
+      <div class="nav-icon-container" id="icon-container">
+        <i class="ph ph-list nav-icon active-icon"></i>
+        <i class="ph ph-x-circle nav-icon"></i>
+      </div>
+    </div>
+    <div id="list-container" class="nav-container">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/portraits">Portraits</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () { $("#icon-container").click(function () { $(".nav-icon").toggleClass("active-icon"), $("#mobile").toggleClass("active-list"), $(".nav-list-mobile").toggleClass("active-list") }) });
+</script>

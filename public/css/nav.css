@@ -1,0 +1,142 @@
+#nav-wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+    margin-bottom: 5vh;
+}
+
+#mobile-controls {
+    display: none;
+}
+
+.navbar {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.nav-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+}
+
+.mobile-nav-container {
+    position: relative;
+    display: flex;
+    height: 0;
+    width: 0;
+    transition: all 0.5s ease;
+}
+
+.nav-logo-container {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.nav-logo-anchor {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.nav-logo {
+    position: relative;
+    max-width: 60%;
+    height: 100%;
+}
+
+.nav-list {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+    font-size: x-large;
+}
+
+/* Add a CSS class to hide the mobile navigation by default */
+.nav-list-mobile {
+    opacity: 0;
+    transition: all 0.5s ease;
+    font-size: xx-large;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-left: 2vh;
+}
+
+@media (max-width: 768px) {
+    #nav-wrapper {
+        flex-direction: column;
+    }
+    #mobile-controls {
+        display: flex;
+    }
+    .nav-logo {
+        max-width: 100%;
+    }
+
+    .active-list{
+        height: 40vh !important;
+        width: 100% !important;
+        opacity: 1 !important;
+    }
+    .nav-icon-container {
+        position: relative;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+    }
+
+    .nav-icon {
+        display: none;
+        margin: 2vh;
+        font-size: xxx-large;
+    }
+
+    /* Hide the "ph-x-circle" icon by default */
+    .ph-x-circle {
+        display: none;
+    }
+
+    /* Style for the "active" icon */
+    .active-icon {
+        display: inline-block;
+    }
+
+    /* Hide the desktop navigation links */
+    #list-container {
+        display: none;
+    }
+
+    /* Show the mobile navigation links when the mobile button is clicked */
+    #mobile.active .nav-list-mobile {
+        display: flex;
+    }
+}
+
+@media (max-width: 650px) {
+    #nav-wrapper {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 390px) {
+    #mobile-controls {
+        width: 30%;
+    }
+    .nav-container {
+        width: 70%;
+    }
+}

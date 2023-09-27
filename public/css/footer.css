@@ -1,0 +1,38 @@
+#footer-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    margin-top: 10vh;
+}
+
+.footer {
+    position: relative;
+    display: flex;
+    padding: 15px;
+}
+
+.footer-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    text-align: center;
+}
+
+.footer-anchor {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-icon {
+    position: relative;
+    display: flex;
+    margin-right: 5px;
+}

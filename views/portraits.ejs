@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/public/css/root.css">
+  <title>portraits</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <%- include('partials/navbar.ejs') %>
+    <div class="page-wrapper">
+      portraits
+      <div class="gallery-wrapper">
+        <% for (let i=0; i < items.length; i++) { %>
+          <% if (i % 6===0) { %>
+            <div class="gallery-row">
+              <% } %>
+                <div class="row-child">
+                  <div class="image-container">
+                    <img class="child-img" src="<%= items[i].image %>" data-index="<%= i %>">
+                    <% if (items[i].availability==='sold' ) { %>
+                      <div class="sold-overlay">Sold!</div>
+                      <% } %>
+                        <img class="child-measure-img" src="<%= items[i].measure %>" data-index="<%= i %>">
+                  </div>
+                </div>
+                <% if (i % 6===5 || i===items.length - 1) { %>
+            </div>
+            <% } %>
+              <% } %>
+      </div>
+    </div>
+    <%- include('partials/footer.ejs') %>
+</body>
+
+</html>

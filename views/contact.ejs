@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/root.css">
+    <link rel="stylesheet" href="/public/css/contact.css">
+    <title>contact</title>
+</head>
+
+<body>
+    <%- include('partials/navbar.ejs') %>
+        <div id="content-wrapper">
+            <div class="content-container">
+                <div class="content-text-container">
+                    <p class="content-text">
+                        put a bio here if you want one
+                    </p>
+                </div>
+                <hr class="content-hr-horiz">
+                <ul class="content-list">
+                    <li class="content-list-item"><a href="#"><i class="ph ph-instagram-logo"></i>
+                            your instagram here</a></li>
+                    <li class="content-list-item"><a href="#"><i class="ph ph-envelope"></i>
+                            your email here</a></li>
+                    <li class="content-list-item"><a href="#"><i class="ph ph-planet"></i>
+                            any other contact here</a></li>
+                </ul>
+            </div>
+            <hr class="content-hr-vert">
+            <div class="content-container">
+                <div class="content-image-container">
+                    <img class="content-image" src="/public/assets/placeholder.jpg" alt="bio image">
+                    <p style="font-size: x-large;">image of you here if you want</p>
+                </div>
+            </div>
+        </div>
+        <%- include('partials/footer.ejs') %>
+            <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</body>
+
+</html>
