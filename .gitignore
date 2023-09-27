@@ -12,6 +12,7 @@
 /.yarn-integrity
 /.cache/
 .yarn-error.log
+.DS_Store
 
 # Editor-specific files
 /.idea/
