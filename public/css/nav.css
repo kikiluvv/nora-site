@@ -17,11 +17,15 @@
     height: 100%;
 }
 
+#logo-container {
+    width: 40%;
+}
+
 .nav-container {
     position: relative;
     display: flex;
     flex-direction: row;
-    width: 50%;
+    width: 60%;
 }
 
 .mobile-nav-container {
@@ -136,13 +140,17 @@
     #mobile-controls {
         width: 40%;
     }
+    #logo-container {
+        width: 60%;
+    }
     .nav-container {
         width: 60%;
     }
-
+    .nav-icon-container {
+        justify-content: center;
+    }
     .nav-icon {
-        width: 100%;
-        height: 100%;
+      
         font-size: xxx-large
     }
 
