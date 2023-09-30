@@ -5,12 +5,11 @@
     list-style: none;
     text-decoration: none;
 }
-  
 
 :root {
     --main-color-light: rgb(255, 255, 255);
     --alt-color-light: rgb(0, 0, 0);
-    
+
     --main-color-dark: rgb(0, 0, 0);
     --alt-color-dark: rgb(255, 255, 255);
 
@@ -44,8 +43,9 @@ a:active {
         background-color: var(--main-color-dark);
         color: var(--alt-color-dark);
     }
+
     img {
         filter: invert();
     }
-   
+
 }
