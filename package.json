@@ -4,7 +4,9 @@
   "description": "express app for nora",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "build": "npm install",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
