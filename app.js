@@ -116,8 +116,8 @@ app.get('/products', (req, res) => {
     });
 });
 
-app.get('/gallery', (req, res) => {
-    const filePath = path.join(__dirname, 'data', 'gallery.json');
+app.get('/studio', (req, res) => {
+    const filePath = path.join(__dirname, 'data', 'studio.json');
 
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
@@ -127,7 +127,7 @@ app.get('/gallery', (req, res) => {
         }
 
         const items = JSON.parse(data);
-        res.render('gallery', { items });
+        res.render('studio', { items });
     });
 });
 
