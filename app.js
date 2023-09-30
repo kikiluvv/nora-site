@@ -3,11 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const multer = require('multer');
-const { updateItems } = require('./middleware/updateItems');
 require('dotenv').config();
 const app = express();
 const helmet = require('helmet');
+const bcrypt = require('bcrypt');
 
 
 app.set('view engine', 'ejs');
@@ -25,9 +24,19 @@ app.use(
                 "'self'",
                 "'unsafe-inline'",
                 'https://ajax.googleapis.com',
+                'https://www.googletagmanager.com/',
+                'https://ajax.googletagmanager.com/',
+                'https://www.google-analytics.com',
                 'https://code.jquery.com',
                 'https://unpkg.com',
+                'http://localhost:3000',
                 'https://cdn.jsdelivr.net',
+            ],
+            connectSrc: [
+                'https://www.googletagmanager.com/',
+                'https://ajax.googletagmanager.com/',
+                'https://www.google-analytics.com',
+                'http://localhost:3000',
             ],
             imgSrc: ["'self'", 'data:', 'https://modelviewer.dev'],
         },
@@ -44,6 +53,9 @@ app.use(
         secret: process.env.SESSION_KEY,
         resave: false,
         saveUninitialized: true,
+        cookie: {
+            maxAge: 3600000, // Set the maximum age to 1 hour (in milliseconds)
+        },
     })
 );
 
@@ -59,33 +71,7 @@ function requireAuth(req, res, next) {
     }
 }
 
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/assetts/shop');
-    },
-    filename: (req, file, cb) => {
-        const extension = path.extname(file.originalname);
-        const filename = Date.now() + extension; // Generate a unique filename
-        cb(null, filename);
-    },
-});
 
-// Create the multer upload middleware
-const upload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith('image/')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only image files are allowed.'));
-        }
-    },
-    onError: (err, next) => {
-        console.error(err);
-        next(err); // Pass the error to the next middleware
-    }
-});
 
 //------------//
 //   Routes   //
@@ -145,6 +131,7 @@ app.get('/gallery', (req, res) => {
     });
 });
 
+
 //------------//
 //    Auth    //
 //------------//
@@ -158,83 +145,63 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
-// Use body-parser middleware for parsing URL-encoded form data
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
-    if (
-        (username === process.env.USERNAME1 && password === process.env.PASSWORD1) ||
-        (username === process.env.USERNAME2 && password === process.env.PASSWORD2)
-    ) {
-        // Successful login
-        req.session.authenticated = true;
-        res.redirect('dashboard');
+    const storedUser = process.env.USERNAME; // Load the username from .env
+    const hashedPassword = process.env.HASHED_PASSWORD; // Load the hashed password from .env
+
+    // First, check if the submitted username matches the stored username
+    if (username === storedUser) {
+        // Use bcrypt to compare the inputted password with the hashed password
+        bcrypt.compare(password, hashedPassword, (err, result) => {
+            if (err) {
+                console.error(err);
+                // Handle the error
+                res.status(500).send('Internal Server Error');
+                return;
+            }
+
+            if (result) {
+                // Successful login
+                req.session.authenticated = true;
+                res.redirect('dashboard');
+            } else {
+                // Failed login
+                req.session.authenticated = false;
+                res.redirect('/login');
+            }
+        });
     } else {
-        // Failed login
-        console.log('pwned');
+        // Username doesn't match
         req.session.authenticated = false;
         res.redirect('/login');
     }
-
 });
 
-//------------//
-//    Admin   //
-//------------//
 
 
 app.get('/dashboard', requireAuth, (req, res) => {
     res.render('dashboard');
 });
 
+// Import necessary middleware and functions for BW
+const uploadPortraits = require('./middleware/portraitsUpload');
+const updatePortraitsItems = require('./controllers/updatePortraitsItems.js');
+
 app.get('/dashboard/portraits', requireAuth, (req, res) => {
     const filePath = path.join(__dirname, 'data', 'portraits.json');
     const itemsData = fs.readFileSync(filePath, 'utf8');
     const items = JSON.parse(itemsData);
-    res.render('dashboardPortrait', { items });
+    res.render('dashboardPortraits', { items });
 });
 
-app.get('/dashboard/products', requireAuth, (req, res) => {
-    const filePath = path.join(__dirname, 'data', 'products.json');
-    const itemsData = fs.readFileSync(filePath, 'utf8');
-    const items = JSON.parse(itemsData);
-    res.render('dashboardProducts', { items });
-});
 
-// Add item route
-app.post('/dashboard/add-item', requireAuth, upload.fields([
+// BW Add item route
+app.post('/dashboard/portraits/add-item', requireAuth, uploadPortraits.fields([
     { name: 'image', maxCount: 1 },
 ]), (req, res) => {
-    // Retrieve the item details from the request body
-    const { id, title, description, price, size, type } = req.body;
-
-    // Retrieve the filenames of the uploaded files
-    console.log('req.files:', req.files);
-    const image = req.files['image'][0].filename;
-    const measure = req.files['measure'][0].filename;
-
-    // Create the new item object
-    const newItem = {
-        id,
-        title,
-        description,
-        price,
-        size,
-        image: `assetts/shop/${image}`,
-        measure: `assetts/shop/${measure}`,
-        type,
-    };
-
-    // Call the updateItems function to update the items.json file
-    updateItems(newItem);
-
-    res.redirect('/dashboard');
-});
-
-// Edit item route
-app.get('/dashboard/edit-item/:id', requireAuth, (req, res) => {
-    const itemId = req.params.id;
-    const filePath = path.join(__dirname, 'data', 'items.json');
-
+    // Calculate the next ID based on the existing items
+    const filePath = path.join(__dirname, 'data', 'bw.json');
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
             console.error(err);
@@ -242,118 +209,36 @@ app.get('/dashboard/edit-item/:id', requireAuth, (req, res) => {
             return;
         }
 
-        const items = JSON.parse(data);
-        const item = items.find((item) => item.id === itemId);
-        if (!item) {
-            res.status(404).send('Item not found');
-            return;
+        let items = JSON.parse(data);
+
+        // Calculate the next ID
+        let nextId = 1; // Default to 1 if there are no existing items
+        if (items.length > 0) {
+            const maxId = Math.max(...items.map(item => parseInt(item.id)));
+            nextId = maxId + 1;
         }
 
-        res.render('edit-item', { item });
+        // Retrieve the filenames of the uploaded files
+        const image = req.files['image'][0].filename;
+
+        // Create the new item object with the calculated ID and image URL
+        const newItem = {
+            id: nextId.toString(), // Convert to string to match existing IDs
+            url: `public/assets/portraits/${image}`, // URL to the stored image
+        };
+
+        // Call the updateItems function to update the items with the new item data
+        updatePortraitsItems(newItem);
+
+        // Redirect to the appropriate page
+        res.redirect('/login');
     });
 });
 
-app.post('/dashboard/edit-item', requireAuth, upload.fields([
-    { name: 'image', maxCount: 1 },
-    { name: 'measure', maxCount: 1 },
-]), (req, res) => {
-    // Retrieve the item details from the request body
-    const { id, title, description, price, size, type, link, availability } = req.body;
-
-    // Retrieve the filenames of the uploaded files
-    const imageFile = req.files['image'] ? req.files['image'][0].filename : null;
-    const measureFile = req.files['measure'] ? req.files['measure'][0].filename : null;
-
-    // Read the JSON file
-    const filePath = path.join(__dirname, 'data', 'items.json');
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error reading JSON file');
-            return;
-        }
-
-        // Parse the JSON data
-        const items = JSON.parse(data);
-
-        // Find the item to edit based on the ID
-        const itemIndex = items.findIndex(item => item.id === id);
-        const editItem = items[itemIndex];
-
-        if (!editItem) {
-            res.status(404).send('Item not found');
-            return;
-        }
-
-        // Get the existing item
-        const existingItem = items[itemIndex];
-
-        // Update the properties if the corresponding form input is provided
-        if (title.trim() !== '') {
-            existingItem.title = title;
-        }
-
-        if (description.trim() !== '') {
-            existingItem.description = description;
-        }
-
-        if (size.trim() !== '') {
-            existingItem.size = size;
-        }
-
-        if (price.trim() !== '') {
-            existingItem.price = price;
-        }
-
-        if (type.trim() !== '') {
-            existingItem.type = type;
-        }
-
-        if (availability.trim() !== '') {
-            existingItem.availability = availability;
-        }
-
-        if (link.trim() !== '') {
-            existingItem.link = link;
-        }
-
-        // Check if any image file is uploaded
-        if (imageFile) {
-            existingItem.image = `assetts/shop/${imageFile}`;
-        } else {
-            // No file uploaded, retain the original image if existingItem and existingItem.image are defined
-            if (existingItem && existingItem.image) {
-                existingItem.image = `assetts/shop/${existingItem.image}`;
-            }
-        }
-        if (measureFile) {
-            existingItem.measure = `assetts/shop/${measureFile}`;
-        } else {
-            // No file uploaded, retain the original image if existingItem and existingItem.image are defined
-            if (existingItem && existingItem.measure) {
-                existingItem.measure = `assetts/shop/${existingItem.measure}`;
-            }
-        }
-
-        // Write the updated JSON data back to the file
-        fs.writeFile(filePath, JSON.stringify(items, null, 2), (err) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('Error writing JSON file');
-                return;
-            }
-
-            res.redirect('/dashboard');
-        });
-    });
-});
-
-// Remove item route
-app.post('/dashboard/remove-item', requireAuth, (req, res) => {
+// Remove BW item route
+app.post('/dashboard/portraits/remove-item', requireAuth, (req, res) => {
     const itemId = req.body.id;
-    console.log('Received itemId:', itemId);
-    console.log('Received req.body.id:', req.body.id);
-    const filePath = path.join(__dirname, 'data', 'items.json');
+    const filePath = path.join(__dirname, 'data', 'portraits.json');
 
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
@@ -387,7 +272,101 @@ app.post('/dashboard/remove-item', requireAuth, (req, res) => {
             }
 
             console.log('Item removed successfully.');
-            res.redirect('/dashboard');
+            res.redirect('/login');
+        });
+    });
+});
+
+
+// Import necessary middleware and functions for Color
+const uploadProducts = require('./middleware/productsUpload');
+const updateProductsItems = require('./controllers/updateProductsItems.js');
+
+app.get('/dashboard/products', requireAuth, (req, res) => {
+    const filePath = path.join(__dirname, 'data', 'products.json');
+    const itemsData = fs.readFileSync(filePath, 'utf8');
+    const items = JSON.parse(itemsData);
+    res.render('dashboardProducts', { items });
+});
+
+
+// Color Add item route
+app.post('/dashboard/products/add-item', requireAuth, uploadProducts.fields([
+    { name: 'image', maxCount: 1 },
+]), (req, res) => {
+    // Calculate the next ID based on the existing items
+    const filePath = path.join(__dirname, 'data', 'products.json');
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error reading JSON file');
+            return;
+        }
+
+        let items = JSON.parse(data);
+
+        // Calculate the next ID
+        let nextId = 1; // Default to 1 if there are no existing items
+        if (items.length > 0) {
+            const maxId = Math.max(...items.map(item => parseInt(item.id)));
+            nextId = maxId + 1;
+        }
+
+        // Retrieve the filenames of the uploaded files
+        const image = req.files['image'][0].filename;
+
+        // Create the new item object with the calculated ID and image URL
+        const newItem = {
+            id: nextId.toString(), // Convert to string to match existing IDs
+            url: `public/assets/products/${image}`, // URL to the stored image
+        };
+
+        // Call the updateItems function to update the items with the new item data
+        updateProductsItems(newItem);
+
+        // Redirect to the appropriate page
+        res.redirect('/login');
+    });
+});
+
+// Remove Color item route
+app.post('/dashboard/products/remove-item', requireAuth, (req, res) => {
+    const itemId = req.body.id;
+    const filePath = path.join(__dirname, 'data', 'products.json');
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error reading JSON file');
+            return;
+        }
+
+        const items = JSON.parse(data);
+
+        // Find the index of the item in the array based on the provided itemId
+        const itemIndex = items.findIndex(item => item.id === itemId);
+        console.log('Item index:', itemIndex);
+
+        // Check if the item exists
+        if (itemIndex === -1) {
+            console.error('Item not found:', itemId);
+            res.status(404).send('Item not found');
+            return;
+        }
+
+        // Remove the item from the array
+        items.splice(itemIndex, 1);
+
+        // Write the updated JSON data back to the file
+        fs.writeFile(filePath, JSON.stringify(items, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error writing to JSON file');
+                return;
+            }
+
+            console.log('Item removed successfully.');
+            res.redirect('/login');
         });
     });
 });

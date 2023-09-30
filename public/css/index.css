@@ -24,15 +24,15 @@
 }
 
 #fn1 {
-    background-image: url(/public/assets/gray.webp);
+    background-image: url(/public/assets/portraits/1.png);
 }
 
 #fn2 {
-    background-image: url(/public/assets/gray.webp);
+    background-image: url(/public/assets/products/1.png);
 }
 
 #fn3 {
-    background-image: url(/public/assets/gray.webp);
+    background-image: url(/public/assets/portraits/2.png);
 }
 
 .floating-nav-element:hover,
@@ -54,7 +54,7 @@
 }
 
 .fn-transition-out {
-    animation: fn-transition-out 0.5s forwards;
+    animation: fn-transition-out 0.8s forwards;
 }
 
 

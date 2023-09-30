@@ -33,7 +33,7 @@
         </div>
         <%- include('partials/footer.ejs') %>
             <script>
-                const fn1=document.getElementById("fn1"),fn2=document.getElementById("fn2"),fn3=document.getElementById("fn3");function handleFnClick(n,t){n.classList.add("fn-clicked"),t.forEach(t=>{t!==n&&t.classList.add("fn-transition-out")});let e="";n===fn1?e="/portraits":n===fn2?e="/products":n===fn3&&(e="/contact"),setTimeout(function(){window.location.href=e},500)}fn1.addEventListener("click",function(){handleFnClick(fn1,[fn2,fn3])}),fn2.addEventListener("click",function(){handleFnClick(fn2,[fn1,fn3])}),fn3.addEventListener("click",function(){handleFnClick(fn3,[fn1,fn2])});
+                const fn1=document.getElementById("fn1"),fn2=document.getElementById("fn2"),fn3=document.getElementById("fn3");function handleFnClick(n,t){n.classList.add("fn-clicked"),t.forEach(t=>{t!==n&&t.classList.add("fn-transition-out")});let e="";n===fn1?e="/portraits":n===fn2?e="/products":n===fn3&&(e="/contact"),setTimeout(function(){window.location.href=e},900)}fn1.addEventListener("click",function(){handleFnClick(fn1,[fn2,fn3])}),fn2.addEventListener("click",function(){handleFnClick(fn2,[fn1,fn3])}),fn3.addEventListener("click",function(){handleFnClick(fn3,[fn1,fn2])});
             </script>
 
 
