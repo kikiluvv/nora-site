@@ -136,7 +136,7 @@
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 420px) {
     #mobile-controls {
         width: 40%;
     }
