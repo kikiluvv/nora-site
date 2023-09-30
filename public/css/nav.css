@@ -54,6 +54,7 @@
     position: relative;
     max-width: 60%;
     height: 100%;
+    filter: invert();
 }
 
 .nav-list {

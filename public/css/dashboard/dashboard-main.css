@@ -15,7 +15,8 @@
     display: flex;
     width: 100%;
     height: 15vh;
-    background-color: rgb(64, 62, 106);
+    padding: 15px;
+    background-color: rgb(115, 112, 172);
 }
 
 .welcome-container {
@@ -161,6 +162,7 @@
     animation: rainbow 2s infinite alternate;
     animation: fontsize 0.1s ease;
 }
+
 /* End Button */
 
 .content-wrapper {
@@ -208,4 +210,66 @@
     font-size: xx-large;
     margin: 5vh;
     border-radius: 15px;
+}
+
+
+@media (max-width: 768px) {
+    .btn {
+        width: 100%;
+        margin-left: 2vh;
+        margin-right: 2vh;
+    }
+
+    .nav-child {
+        width: auto;
+    }
+
+    .nav-wrapper {
+        flex-direction: column;
+    }
+
+    .welcome-container {
+        align-items: flex-start;
+    }
+
+    .welcome-container,
+    .nav-list {
+        width: 100%;
+        height: 50%;
+    }
+
+    .nav-list {
+        justify-content: space-evenly;
+    }
+
+    .header-text {
+        font-size: x-large;
+        margin-left: 2vh;
+    }
+
+    .nav-child {
+        width: 30%;
+        margin-left: 2vh;
+        margin-right: 2vh;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .dashboard-main-list-item {
+        font-size: x-large;
+    }
+
+    .nav-child {
+        width: 45%;
+        margin-left: 2vh;
+        margin-right: 2vh;
+    }
+
+    .btn {
+        width: 100%;
+    }
 }

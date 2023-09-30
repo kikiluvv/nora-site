@@ -47,6 +47,10 @@
     position: relative;
     display: flex;
     font-size: xx-large;
+    color: white;
+    text-shadow: 2px 2px 10px purple;
+    opacity: 1;
+    font-weight: bolder;
 }
 
 .fn-clicked {

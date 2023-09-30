@@ -1,4 +1,4 @@
-*{
+* {
     box-sizing: border-box;
     margin: 0;
     list-style: none;
@@ -80,7 +80,7 @@
     font-size: x-large;
 }
 
-.btn a{
+.btn a {
     color: var(--text-color);
 }
 
@@ -182,4 +182,22 @@
     z-index: 5;
     filter: url(#gooeyness);
 }
+
 /* End Button */
+
+
+@media (max-width: 770px) {
+    .login-form {
+        width: 50%;
+    }
+}
+
+@media (max-width: 450px) {
+    .login-form {
+        width: 70%;
+    }
+
+    .btn {
+        width: 70%;
+    }
+}

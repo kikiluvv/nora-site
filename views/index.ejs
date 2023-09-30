@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/public/css/root.css">
     <link rel="stylesheet" href="/public/css/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri&display=swap" rel="stylesheet">
     <title>nora's website</title>
 </head>
 
@@ -33,7 +36,7 @@
         </div>
         <%- include('partials/footer.ejs') %>
             <script>
-                const fn1=document.getElementById("fn1"),fn2=document.getElementById("fn2"),fn3=document.getElementById("fn3");function handleFnClick(n,t){n.classList.add("fn-clicked"),t.forEach(t=>{t!==n&&t.classList.add("fn-transition-out")});let e="";n===fn1?e="/portraits":n===fn2?e="/products":n===fn3&&(e="/studio"),setTimeout(function(){window.location.href=e},900)}fn1.addEventListener("click",function(){handleFnClick(fn1,[fn2,fn3])}),fn2.addEventListener("click",function(){handleFnClick(fn2,[fn1,fn3])}),fn3.addEventListener("click",function(){handleFnClick(fn3,[fn1,fn2])});
+                const fn1 = document.getElementById("fn1"), fn2 = document.getElementById("fn2"), fn3 = document.getElementById("fn3"); function handleFnClick(n, t) { n.classList.add("fn-clicked"), t.forEach(t => { t !== n && t.classList.add("fn-transition-out") }); let e = ""; n === fn1 ? e = "/portraits" : n === fn2 ? e = "/products" : n === fn3 && (e = "/studio"), setTimeout(function () { window.location.href = e }, 900) } fn1.addEventListener("click", function () { handleFnClick(fn1, [fn2, fn3]) }), fn2.addEventListener("click", function () { handleFnClick(fn2, [fn1, fn3]) }), fn3.addEventListener("click", function () { handleFnClick(fn3, [fn1, fn2]) });
             </script>
 
 
