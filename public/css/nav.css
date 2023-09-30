@@ -106,7 +106,6 @@
     .nav-icon {
         display: none;
         margin: 2vh;
-        font-size: xxx-large;
     }
 
     /* Hide the "ph-x-circle" icon by default */
@@ -138,20 +137,17 @@
 
 @media (max-width: 420px) {
     #mobile-controls {
-        width: 40%;
+        width: 30%;
     }
     #logo-container {
-        width: 60%;
+        width: 70%;
     }
     .nav-container {
-        width: 60%;
+        width: 70%;
     }
     .nav-icon-container {
         justify-content: center;
     }
-    .nav-icon {
-      
-        font-size: xxx-large
-    }
+    
 
 }
