@@ -1,3 +1,30 @@
-{
-    
-}
+[
+    {
+        "id": "1",
+        "url": "public/assets/studio/1.png",
+        "tags": [
+            "cool"
+        ]
+    },
+    {
+        "id": "2",
+        "url": "public/assets/studio/2.png",
+        "tags": [
+            "cool"
+        ]
+    },
+    {
+        "id": "3",
+        "url": "public/assets/studio/3.png",
+        "tags": [
+            "cool"
+        ]
+    },
+    {
+        "id": "4",
+        "url": "public/assets/studio/4.png",
+        "tags": [
+            "cool"
+        ]
+    }
+]

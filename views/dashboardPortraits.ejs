@@ -45,19 +45,11 @@
             <div class="content-container">
                 <div class="content-container-left">
                     <div class="control-wrapper">
-                        <form id="add-item" action="/dashboard/add-item" method="POST" enctype="multipart/form-data">
+                        <form id="add-item" action="/dashboard/portraits/add-item" method="POST"
+                            enctype="multipart/form-data">
                             <h2 style="text-decoration: underline;">Add Portrait</h2>
-                            <div class="input-wrapper">
-                                <input class="input" type="number" name="id" placeholder="ID" required>
-                                <input class="input" type="text" name="title" placeholder="Title" required>
-                                <input class="input" type="text" name="description" placeholder="Description" required>
-                                <input class="input" type="text" name="tags" placeholder="Tags (Seperate by comma)">
-                            </div>
                             <div class="images-wrapper">
-                                <label for="image">Portrait Image</label>
                                 <input id="image" class="input" type="file" name="image" required>
-                                <label for="measure">Portrait Alt Image</label>
-                                <input id="measure" class="input" type="file" name="alt" required>
                             </div>
                             <div class="button-wrap">
                                 <button class="btn form-btn" id="add-btn" type="submit">Add Item</button>
@@ -74,89 +66,19 @@
                                     <img class="preview-img" id="preview-img1"
                                         src="/public/assets/global/placeholder.jpg">
                                 </div>
-                                <div class="preview-right">
-                                    <h2 class="preview-title" id="preview-title1"></h2>
-                                    <p class="preview-description" id="preview-description1"></p>
-                                    <hr class="preview-hr">
-                                    <p class="preview-tags" id="preview-tags1"></p>
-                                    <hr class="preview-hr">
-                                    <div class="preview-btn-wrapper">
-                                        <div class="preview-btn-contain">
-                                            <button class="preview-btn">Buy!</button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="content-container">
                 <div class="content-container-left">
                     <div class="control-wrapper">
-                        <form id="edit-item" action="/dashboard/edit-item" method="POST" enctype="multipart/form-data">
-                            <h2 style="text-decoration: underline;">Edit Portrait</h2>
-                            <div class="input-wrapper">
-                                <input class="input" type="number" name="id" id="item-id" placeholder="Item ID"
-                                    required>
-                                <input class="input" type="text" name="title" placeholder="New Item Name">
-                                <input class="input" type="text" name="description"
-                                    placeholder="New Description"></input>
-                                <input class="input" type="text" name="link" placeholder="New Link">
-                            </div>
-                            <div class="images-wrapper">
-                                <label class="images-input" for="edit-image">New Image</label>
-                                <input id="edit-image" class="images-input input" type="file" name="image">
-                                <label class="images-input" for=edit-alt">New Alt Image</label>
-                                <input id="edit-alt" class="images-input input" type="file" name="alt">
-                                <label class="images-input" for="edit-availability">New Availability</label>
-                                <select id="edit-availability" class="images-input input" name="availability"
-                                    placeholder="New availability">
-                                    <option class="images-input" value="available">Available</option>
-                                    <option class="images-input" value="sold">Sold</option>
-                                </select>
-                            </div>
-                            <div class="button-wrap">
-                                <button class="btn form-btn" id="edit-btn" type="submit">Edit Portrait</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="content-container-right">
-                    <div class="preview-wrapper">
-                        <div class="preview-container">
-                            <h2 class="preview-header">Edited Portrait Preview</h2>
-                            <div id="edit-preview" class="preview">
-                                <div class="preview-left">
-                                    <img class="preview-img" id="preview-img2"
-                                        src="/public/assets/global/placeholder.jpg">
-                                </div>
-                                <div class="preview-right">
-                                    <h2 class="preview-title" id="preview-title2"></h2>
-                                    <p class="preview-description" id="preview-description2"></p>
-                                    <hr class="preview-hr">
-                                    <p class="preview-size" id="preview-size2"></p>
-                                    <p class="preview-price" id="preview-price2"></p>
-                                    <hr class="preview-hr">
-                                    <div class="preview-btn-wrapper">
-                                        <div class="preview-btn-contain">
-                                            <button class="preview-btn">Buy!</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-container">
-                <div class="content-container-left">
-                    <div class="control-wrapper">
-                        <form id="remove-item" action="/dashboard/remove-item" method="POST">
+                        <form id="remove-item" action="/dashboard/portraits/remove-item" method="POST">
                             <h2 style="text-decoration: underline;">Remove Portrait</h2>
-                            <input type="text" id="item-id2" name="id" placeholder="Item ID" required>
+                            <select id="item-select" name="id" required>
+                                <option>Select ID From List</option>
+                            </select>
                             <div class="button-wrap">
                                 <button class="btn form-btn" id="edit-btn" type="submit">Remove Portrait</button>
                             </div>
@@ -171,20 +93,6 @@
                                 <div class="preview-left">
                                     <img class="preview-img" id="preview-img3"
                                         src="/public/assets/global/placeholder.jpg">
-
-                                </div>
-                                <div class="preview-right">
-                                    <h2 class="preview-title" id="preview-title3"></h2>
-                                    <p class="preview-description" id="preview-description3"></p>
-                                    <hr class="preview-hr">
-                                    <p class="preview-size" id="preview-size3"></p>
-                                    <p class="preview-price" id="preview-price3"></p>
-                                    <hr class="preview-hr">
-                                    <div class="preview-btn-wrapper">
-                                        <div class="preview-btn-contain">
-                                            <button class="preview-btn">Buy!</button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -214,6 +122,7 @@
             });
         });
     </script>
+    <script src="/public/js/dashboardPortraits.js"></script>
 </body>
 
 </html>

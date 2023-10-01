@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/public/css/imageGallery.css">
   <link rel="stylesheet" href="/public/css/root.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,27 +18,24 @@
   <%- include('partials/navbar.ejs') %>
     <div class="page-wrapper">
       studio
-      <div class="shop-wrapper">
+      <div class="gallery-wrapper">
         <% for (let i=0; i < items.length; i++) { %>
-          <% if (i % 6===0) { %>
-            <div class="shop-row">
-              <% } %>
-                <div class="row-child">
-                  <div class="image-container">
-                    <img class="child-img" src="<%= items[i].image %>" data-index="<%= i %>">
-                    <% if (items[i].availability==='sold' ) { %>
-                      <div class="sold-overlay">Sold!</div>
-                      <% } %>
-                        <img class="child-alt-img" src="<%= items[i].altImage %>" data-index="<%= i %>">
-                  </div>
-                </div>
-                <% if (i % 6===5 || i===items.length - 1) { %>
-            </div>
-            <% } %>
-              <% } %>
+          <div class="image-container">
+            <img class="child-img" src="<%= items[i].url %>" data-index="<%= i %>">
+          </div>
+          <% } %>
+      </div>
+      <div id="gallery-modal" class="modal">
+        <span class="close"><i class="ri-close-circle-line ri-3x modal-icon"></i></span>
+        <div class="modal-content">
+        </div>
+        <a class="prev">&#10094;</a>
+        <a class="next">&#10095;</a>
       </div>
     </div>
     <%- include('partials/footer.ejs') %>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="/public/js/imageGallery.js"></script>
 </body>
 
 </html>

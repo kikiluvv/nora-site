@@ -8,13 +8,13 @@
 }
 
 :root {
-    --main-color-light: rgb(82 , 3, 3);
-    --alt-color-light: rgb(232, 165, 207);
+    --main-color-light: #481212;
+    --alt-color-light: rgb(236, 180, 215);
 
-    --main-color-dark: rgb(82 , 3, 3);
-    --alt-color-dark: rgb(232, 165, 207);
+    --main-color-dark: #481212;
+    --alt-color-dark: rgb(236, 180, 215);
 
-    --link-color: rgb(232, 165, 207);
+    --link-color: rgb(229, 176, 208);
 
     font-family: 'Durango', sans-serif;
 

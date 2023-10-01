@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/dashboard/dashboard-interface.css">
+    <link rel="stylesheet" href="/public/css/root.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Studio | Dashboard</title>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="nav-wrapper">
+            <div class="welcome-container">
+                <h1 class="header-text">
+                    Studio
+                </h1>
+            </div>
+            <div class="nav-list">
+                <div class="nav-child">
+                    <div class="btn-contain">
+                        <button id="btn1" class="btn" data-redirect="/dashboard">Dashboard</button>
+                    </div>
+                </div>
+                <div class="nav-child">
+                    <div class="btn-contain">
+                        <button id="btn1" class="btn" data-redirect="/dashboard/help">Help</button>
+                    </div>
+                </div>
+                <div class="nav-child">
+                    <div class="btn-contain">
+                        <button id="btn2" class="btn" data-redirect="/logout">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper">
+
+            <div class="content-container">
+                <div class="content-container-left">
+                    <div class="control-wrapper">
+                        <form id="add-item" action="/dashboard/studio/add-item" method="POST"
+                            enctype="multipart/form-data">
+                            <h2 style="text-decoration: underline;">Add Studio Image</h2>
+                            <div class="images-wrapper">
+                                <input id="image" class="input" type="file" name="image" required>
+                            </div>
+                            <div class="button-wrap">
+                                <button class="btn form-btn" id="add-btn" type="submit">Add Item</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="content-container-right">
+                    <div class="preview-wrapper">
+                        <div class="preview-container">
+                            <h2 class="preview-header">New Studio Image Preview</h2>
+                            <div id="add-preview" class="preview">
+                                <div class="preview-left">
+                                    <img class="preview-img" id="preview-img1"
+                                        src="/public/assets/global/placeholder.jpg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-container">
+                <div class="content-container-left">
+                    <div class="control-wrapper">
+                        <form id="remove-item" action="/dashboard/studio/remove-item" method="POST">
+                            <h2 style="text-decoration: underline;">Remove Studio Image</h2>
+                            <select id="item-select" name="id" required>
+                                <option>Select ID From List</option>
+                            </select>
+                            <div class="button-wrap">
+                                <button class="btn form-btn" id="edit-btn" type="submit">Remove Studio Image</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="content-container-right">
+                    <div class="preview-wrapper">
+                        <div class="preview-container">
+                            <h2 class="preview-header">Removed Studio Image Preview</h2>
+                            <div id="remove-preview" class="preview">
+                                <div class="preview-left">
+                                    <img class="preview-img" id="preview-img3"
+                                        src="/public/assets/global/placeholder.jpg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="help-wrapper">
+            <div class="help-popup">
+                <div class="add-help">
+
+                </div>
+                <div class="edit-help">
+
+                </div>
+                <div class="remove-help">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.btn').click(function () {
+                var redirectUrl = $(this).data('redirect');
+                window.location.href = redirectUrl;
+            });
+        });
+    </script>
+    <script src="/public/js/dashboardStudio.js"></script>
+</body>
+
+</html>

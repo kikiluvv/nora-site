@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const app = express();
@@ -51,10 +51,12 @@ app.use(
 
 // Set up session middleware
 app.use(
-    session({
+    cookieSession({
+        name: 'session',
         secret: process.env.SESSION_KEY,
         resave: false,
         saveUninitialized: true,
+        sameSite: 'strict',
         cookie: {
             maxAge: 3600000, // Set the maximum age to 1 hour (in milliseconds)
         },
@@ -283,6 +285,7 @@ app.post('/dashboard/portraits/remove-item', requireAuth, (req, res) => {
 // Import necessary middleware and functions for Color
 const uploadProducts = require('./middleware/productsUpload');
 const updateProductsItems = require('./controllers/updateProductsItems.js');
+const { strict } = require('assert');
 
 app.get('/dashboard/products', requireAuth, (req, res) => {
     const filePath = path.join(__dirname, 'data', 'products.json');
