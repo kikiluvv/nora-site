@@ -27,6 +27,7 @@
     max-width: 100%;
     height: 100%;
     object-fit: cover;
+    cursor: zoom-in;
 }
 
 /* Modal styles */
@@ -71,9 +72,11 @@
 /* Previous and Next buttons */
 .prev {
     left: 3vh;
+    cursor: w-resize;
 }
 .next {
     right: 3vh;
+    cursor: e-resize;
 }
 .prev,
 .next {
@@ -91,7 +94,6 @@
     text-decoration: none;
     padding: 10px 15px;
     border-radius: 15px;
-    cursor: pointer;
     transition: color 0.3s;
 }
 
