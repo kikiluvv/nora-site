@@ -58,11 +58,10 @@ $(document).ready(function () {
         console.log(modalOpen);
     }
 
-
     // Click event on .child-img
     $('.child-img').click(function (event) {
         event.stopPropagation(); // Prevent the click event from propagating to the document
-        currentIndex = $(this).index();
+        currentIndex = $(this).data('index'); // Use data-index to get the correct index
         showImage(currentIndex);
         openModal();
     });
