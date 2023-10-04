@@ -71,16 +71,19 @@
                     </div>
                 </div>
             </div>
+
             <div class="content-container">
                 <div class="content-container-left">
                     <div class="control-wrapper">
-                        <form id="remove-item" action="/dashboard/portraits/remove-item" method="POST">
-                            <h2 style="text-decoration: underline;">Remove Portrait</h2>
-                            <select id="item-select" name="id" required>
-                                <option>Select ID From List</option>
-                            </select>
+                        <form id="remove-item">
+                            <h2 style="text-decoration: underline;">Remove Portraits</h2>
+                            <button id="select-all-btn">Select All</button>
+                            <div id="item-select" name="ids[]" multiple required>
+                                <!-- Populate this select input with all available items -->
+                            </div>
                             <div class="button-wrap">
-                                <button class="btn form-btn" id="edit-btn" type="submit">Remove Portrait</button>
+                                <button class="btn form-btn" id="remove-selected-btn">Remove
+                                    Portraits</button>
                             </div>
                         </form>
                     </div>
@@ -88,9 +91,13 @@
                 <div class="content-container-right">
                     <div class="preview-wrapper">
                         <div class="preview-container">
-                            <h2 class="preview-header">Removed Portrait Preview</h2>
+                            <h2 class="preview-header">Removed Portraits Preview</h2>
                             <div id="remove-preview" class="preview">
-                                <div class="preview-left">
+                                <div class="gallery-controls">
+                                    <button id="prev-button" class="control-button">Previous</button>
+                                    <button id="next-button" class="control-button">Next</button>
+                                </div>
+                                <div class="preview-gallery">
                                     <img class="preview-img" id="preview-img3"
                                         src="/public/assets/global/placeholder.jpg">
                                 </div>
@@ -99,6 +106,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
         <div class="help-wrapper">
             <div class="help-popup">
@@ -123,6 +132,9 @@
         });
     </script>
     <script src="/public/js/dashboardPortraits.js"></script>
+    <!-- Include Axios via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 </body>
 
 </html>

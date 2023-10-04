@@ -30,6 +30,7 @@ app.use(
                 'https://code.jquery.com',
                 'https://unpkg.com',
                 'http://localhost:3000',
+                'https://localhost:3000',
                 'https://cdn.jsdelivr.net',
                 'https://nora-dev.onrender.com/',
             ],
@@ -38,6 +39,7 @@ app.use(
                 'https://ajax.googletagmanager.com/',
                 'https://www.google-analytics.com',
                 'http://localhost:3000',
+                'https://localhost:3000',
                 'https://nora-dev.onrender.com/',
             ],
             imgSrc: ["'self'", 'data:', 'https://modelviewer.dev'],
@@ -58,13 +60,15 @@ app.use(
         saveUninitialized: true,
         sameSite: 'strict',
         cookie: {
-            maxAge: 3600000, // Set the maximum age to 1 hour (in milliseconds)
+            maxAge: 3600000,
+            expires: 360000, // Set the maximum age to 1 hour (in milliseconds)
         },
     })
 );
 
 // Use body-parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Middleware to check authentication for protected routes
 function requireAuth(req, res, next) {
@@ -74,6 +78,8 @@ function requireAuth(req, res, next) {
         res.redirect('/login');
     }
 }
+
+const { validateLogin } = require('./middleware/validateLogin');
 
 
 
@@ -149,7 +155,7 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', validateLogin, (req, res) => {
     const { username, password } = req.body;
     const storedUser = process.env.USERNAME; // Load the username from .env
     const hashedPassword = process.env.HASHED_PASSWORD; // Load the hashed password from .env
@@ -166,21 +172,45 @@ app.post('/login', (req, res) => {
             }
 
             if (result) {
-                // Successful login
-                req.session.authenticated = true;
+                // Clear the existing session cookie
+                req.session = null;
+
+                // Create a new session cookie with an extended expiration
+                req.session = {
+                    authenticated: true,
+                    cookie: {
+                        expires: new Date(Date.now() + 3600000), // Set to 1 hour from now
+                    },
+                };
                 res.redirect('dashboard');
             } else {
                 // Failed login
                 req.session.authenticated = false;
+
+                // Custom response for validation errors
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                    return
+                }
+
                 res.redirect('/login');
             }
         });
     } else {
         // Username doesn't match
         req.session.authenticated = false;
+
+        // Custom response for validation errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return
+        }
+
         res.redirect('/login');
     }
 });
+
+
 
 
 
@@ -192,20 +222,12 @@ app.get('/dashboard', requireAuth, (req, res) => {
 const uploadPortraits = require('./middleware/portraitsUpload');
 const updatePortraitsItems = require('./controllers/updatePortraitsItems.js');
 
-app.get('/dashboard/portraits', requireAuth, (req, res) => {
-    const filePath = path.join(__dirname, 'data', 'portraits.json');
-    const itemsData = fs.readFileSync(filePath, 'utf8');
-    const items = JSON.parse(itemsData);
-    res.render('dashboardPortraits', { items });
-});
-
-
 // BW Add item route
 app.post('/dashboard/portraits/add-item', requireAuth, uploadPortraits.fields([
     { name: 'image', maxCount: 1 },
 ]), (req, res) => {
     // Calculate the next ID based on the existing items
-    const filePath = path.join(__dirname, 'data', 'bw.json');
+    const filePath = path.join(__dirname, 'data', 'portraits.json');
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
             console.error(err);
@@ -234,51 +256,72 @@ app.post('/dashboard/portraits/add-item', requireAuth, uploadPortraits.fields([
         // Call the updateItems function to update the items with the new item data
         updatePortraitsItems(newItem);
 
-        // Redirect to the appropriate page
-        res.redirect('/login');
+
+        res.redirect('/dashboard/portraits');
     });
 });
 
-// Remove BW item route
+
 app.post('/dashboard/portraits/remove-item', requireAuth, (req, res) => {
-    const itemId = req.body.id;
+    const selectedItems = req.body.id;
     const filePath = path.join(__dirname, 'data', 'portraits.json');
+
+    console.log('Received Item IDs:', selectedItems);
 
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
-            console.error(err);
+            console.error('Error reading JSON file:', err);
             res.status(500).send('Error reading JSON file');
             return;
         }
 
-        const items = JSON.parse(data);
+        let items = JSON.parse(data);
 
-        // Find the index of the item in the array based on the provided itemId
-        const itemIndex = items.findIndex(item => item.id === itemId);
-        console.log('Item index:', itemIndex);
-
-        // Check if the item exists
-        if (itemIndex === -1) {
-            console.error('Item not found:', itemId);
-            res.status(404).send('Item not found');
+        // Check if itemIds is an array before iterating
+        if (!Array.isArray(selectedItems)) {
+            console.error('Invalid request: Expected an array of item IDs');
+            res.status(400).send('Invalid request: Expected an array of item IDs');
             return;
         }
 
-        // Remove the item from the array
-        items.splice(itemIndex, 1);
+        // Check if items is an array before performing operations
+        if (!Array.isArray(items)) {
+            console.error('JSON data is not an array');
+            res.status(500).send('JSON data is not an array');
+            return;
+        }
+
+        selectedItems.forEach(itemId => {
+            // Find the index of the item in the array based on the provided itemId
+            const itemIndex = items.findIndex(item => item.id === itemId);
+
+            if (itemIndex !== -1) {
+                // Remove the item from the array
+                items.splice(itemIndex, 1);
+            }
+        });
 
         // Write the updated JSON data back to the file
         fs.writeFile(filePath, JSON.stringify(items, null, 2), 'utf8', (err) => {
             if (err) {
-                console.error(err);
+                console.error('Error writing to JSON file:', err);
                 res.status(500).send('Error writing to JSON file');
                 return;
             }
 
-            console.log('Item removed successfully.');
-            res.redirect('/login');
+            // Redirect after writing the file successfully
+            res.redirect('/dashboard/portraits');
         });
     });
+});
+
+
+
+app.get('/dashboard/portraits', requireAuth, (req, res) => {
+    const filePath = path.join(__dirname, 'data', 'portraits.json');
+    const itemsData = fs.readFileSync(filePath, 'utf8');
+    const items = JSON.parse(itemsData);
+    res.render('dashboardPortraits', { items });
 });
 
 
@@ -330,7 +373,7 @@ app.post('/dashboard/products/add-item', requireAuth, uploadProducts.fields([
         updateProductsItems(newItem);
 
         // Redirect to the appropriate page
-        res.redirect('/login');
+        res.redirect('/dashboard/products');
     });
 });
 
@@ -371,7 +414,7 @@ app.post('/dashboard/products/remove-item', requireAuth, (req, res) => {
             }
 
             console.log('Item removed successfully.');
-            res.redirect('/login');
+            res.redirect('/dashboard/products');
         });
     });
 });

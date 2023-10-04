@@ -19,7 +19,6 @@
     opacity: 0.7;
     filter: grayscale(0.7);
     transition: opacity 0.5s ease, filter 1s ease, transform 0.5s ease, box-shadow 0.3s ease;
-    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -40,7 +39,7 @@
     opacity: 1;
     filter: none;
     transform: scale(1.03);
-    box-shadow: 7px 7px 10px rgba(0, 0, 0, 0.563);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.563);
 }
 
 .floating-nav-element:hover .floating-nav-text,
@@ -73,21 +72,20 @@
 @keyframes fn-clicked {
     0% {
         opacity: 0.7;
-        filter: grayscale(0.7);
         transform: scale(1.03);
-        box-shadow: 7px 7px 10px rgba(0, 0, 0, 0.563);
+        box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.563);
     }
 
     50% {
         transform: scale(1);
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.563);
+        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.563);
     }
 
     100% {
         opacity: 1;
         filter: none;
         transform: scale(1.03);
-        box-shadow: 7px 7px 10px rgba(0, 0, 0, 0.563);
+        box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.563);
     }
 }
 
