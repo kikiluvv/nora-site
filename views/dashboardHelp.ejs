@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/dashboard/dashboard-interface.css">
+    <link rel="stylesheet" href="/public/css/root.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Help | Dashboard</title>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="nav-wrapper">
+            <div class="welcome-container">
+                <h1 class="header-text">
+                    Help
+                </h1>
+            </div>
+            <div class="nav-list">
+                <div class="nav-child">
+                    <div class="btn-contain">
+                        <button id="btn1" class="btn" data-redirect="/dashboard">Dashboard</button>
+                    </div>
+                </div>
+                <div class="nav-child">
+                    <div class="btn-contain">
+                        <button id="btn1" class="btn" data-redirect="/dashboard/help">Help</button>
+                    </div>
+                </div>
+                <div class="nav-child">
+                    <div class="btn-contain">
+                        <button id="btn2" class="btn" data-redirect="/logout">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="help-wrapper" class="content-wrapper">
+            <video id="help-video" controls>
+                <source src="/admin/tutorial" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p id="help-text"><a href="tel:2089715303">Contact kiki for any help :)</a></p>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('.btn').click(function () {
+                    var redirectUrl = $(this).data('redirect');
+                    window.location.href = redirectUrl;
+                });
+            });
+        </script>
+</body>
+
+</html>

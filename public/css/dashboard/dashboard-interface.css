@@ -35,6 +35,27 @@
     margin-top: 10vh;
 }
 
+#help-wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#help-video {
+    width: 100%;
+    height: 100%;
+}
+
+#help-text {
+    text-align: center;
+    margin-top: 3vh;
+    font-size: xx-large;
+}
+
 /*----------------
 |   Nav Styling  |
 ----------------*/

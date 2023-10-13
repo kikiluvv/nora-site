@@ -555,6 +555,15 @@ app.post('/dashboard/studio/remove-item', requireAuth, (req, res) => {
     });
 });
 
+app.get('/dashboard/help', requireAuth, (req, res) => {
+   res.render('dashboardHelp')
+});
+
+app.get('/admin/tutorial', requireAuth, (req, res) => {
+    const videoPath = path.join(__dirname, 'admin', 'assets', 'tutorial4nora.mp4');
+    res.sendFile(videoPath);
+});
+
 app.get('*', (req, res) => {
     res.render('error404')
 });
