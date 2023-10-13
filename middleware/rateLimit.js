@@ -7,4 +7,4 @@ const rateLimiter = rateLimit({
     message: "Too many attempts, please try again later.",
 });
 
-module.exports = rateLimiter
+module.exports = rateLimiter;
