@@ -76,13 +76,14 @@
             <div class="content-container">
                 <div class="content-container-left">
                     <div class="control-wrapper">
-                        <form id="remove-item" action="/dashboard/products/remove-item" method="POST">
+                        <form id="remove-item">
                             <h2 style="text-decoration: underline;">Remove Product</h2>
-                            <select id="item-select" name="id" required>
-                                <option>Select ID From List</option>
-                            </select>
+                            <button id="select-all-btn">Select All</button>
+                            <div id="item-select" name="ids[]" multiple required>
+                                <!-- Populate this select input with all available items -->
+                            </div>
                             <div class="button-wrap">
-                                <button class="btn form-btn" id="edit-btn" type="submit">Remove Product</button>
+                                <button class="btn form-btn" id="remove-selected-btn" type="submit">Remove Product</button>
                             </div>
                         </form>
                     </div>
@@ -92,7 +93,7 @@
                         <div class="preview-container">
                             <h2 class="preview-header">Removed Product Preview</h2>
                             <div id="remove-preview" class="preview">
-                                <div class="preview-left">
+                                <div class="preview-gallery">
                                     <img class="preview-img" id="preview-img3"
                                         src="/public/assets/global/placeholder.jpg">
                                 </div>
@@ -130,6 +131,8 @@
         });
     </script>
     <script src="/public/js/dashboardProduct.js"></script>
+     <!-- Include Axios via CDN -->
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 
 </html>

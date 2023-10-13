@@ -3,6 +3,7 @@
 //    Add  Handle   //
 //------------------//
 
+
 // Get references to the form and preview elements
 const addform = document.getElementById('add-item');
 
@@ -46,7 +47,7 @@ let items; // Initialize the variable
 let selectedItems = [];
 const itemSelect = document.getElementById('item-select');
 
-fetch('/data/products.json')
+fetch('/data/studio.json')
     .then(response => response.json())
     .then(data => {
         items = data; // Assign the loaded JSON data to the 'items' variable
@@ -181,7 +182,7 @@ removeSelectedButton.addEventListener('click', () => {
     const requestBody = JSON.stringify({ id: selectedItems });
 
     // Send an HTTP request to your server to remove the selected items using Axios
-    axios.post('/dashboard/products/remove-item', requestBody, {
+    axios.post('/dashboard/studio/remove-item', requestBody, {
         headers: {
             'Content-Type': 'application/json', // Specify content type as JSON
         },
@@ -191,7 +192,7 @@ removeSelectedButton.addEventListener('click', () => {
                 console.log('Request was successful');
                 // Handle the response here
                 // You can add a redirect here if needed
-                window.location.href = '/dashboard/products/';
+                window.location.href = '/dashboard/studio/';
                 window.history.replaceState({}, document.title, window.location.pathname);
             } else {
                 // Handle the case where the removal request failed
@@ -202,7 +203,4 @@ removeSelectedButton.addEventListener('click', () => {
             console.error('Error removing items:', error);
         });
 });
-
-
-
 

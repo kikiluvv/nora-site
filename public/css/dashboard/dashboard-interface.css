@@ -358,6 +358,8 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
+    justify-content: space-evenly;
+
 }
 
 .gallery-controls {
@@ -416,7 +418,7 @@
 
 .preview-img-remove {
     border-radius: 15px;
-    margin: 20px;
+    margin: 15px;
     max-width: 40%;
     box-sizing: border-box;
 }
@@ -558,6 +560,9 @@
     .btn {
         width: 100%;
     }
+    .preview-img-remove {
+        margin: 10px;
+    }
 }
 
 @media (max-width: 550px) {
@@ -578,5 +583,11 @@
 
     .btn {
         width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .preview-img-remove {
+        margin: 10px;
     }
 }

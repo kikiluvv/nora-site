@@ -43,8 +43,14 @@ app.use(
                 'https://nora-dev.onrender.com/',
             ],
             imgSrc: ["'self'", 'data:', 'https://modelviewer.dev'],
+            frameAncestors: ["'none'"],
         },
-    })
+    }),
+    helmet.frameguard(),
+    helmet.hsts({
+        maxAge: 123456,
+        includeSubDomains: false,
+    }),
 );
 
 //------------//
@@ -54,7 +60,7 @@ app.use(
 // Set up session middleware
 app.use(
     cookieSession({
-        name: 'session',
+        name: 'sessionId',
         secret: process.env.SESSION_KEY,
         resave: false,
         saveUninitialized: true,
@@ -69,6 +75,7 @@ app.use(
 // Use body-parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.disable('x-powered-by')
 
 // Middleware to check authentication for protected routes
 function requireAuth(req, res, next) {
@@ -79,9 +86,28 @@ function requireAuth(req, res, next) {
     }
 }
 
-const { validateLogin } = require('./middleware/validateLogin');
+// Error handling middleware
+app.use((req, res, next) => {
+    // Check for specific status codes and render the appropriate error page
+    if (res.statusCode === 500) {
+        return res.status(500).sendFile(`${__dirname}/public/error500.ejs`);
+    } else if (res.statusCode === 404) {
+        return res.status(404).sendFile(`${__dirname}/public/error404.ejs`);
+    } else if (res.statusCode === 400) {
+        return res.status(400).sendFile(`${__dirname}/public/error400.ejs`);
+    }
+    
+    // For other status codes, let them pass through
+    next();
+});
 
 
+
+const { validateLogin, validationResult } = require('./middleware/validateLogin');
+
+const rateLimiter = require('./middleware/rateLimit');
+
+app.use(rateLimiter);
 
 //------------//
 //   Routes   //
@@ -190,10 +216,13 @@ app.post('/login', validateLogin, (req, res) => {
                 // Custom response for validation errors
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
-                    return
+                    res.status(500).send('Internal Server Error');
+                }
+                else {
+                    res.redirect('/login');
                 }
 
-                res.redirect('/login');
+                
             }
         });
     } else {
@@ -203,7 +232,7 @@ app.post('/login', validateLogin, (req, res) => {
         // Custom response for validation errors
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return
+            console.log(errors.array());
         }
 
         res.redirect('/login');
@@ -218,7 +247,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
     res.render('dashboard');
 });
 
-// Import necessary middleware and functions for BW
+// Import necessary middleware and functions for portraits
 const uploadPortraits = require('./middleware/portraitsUpload');
 const updatePortraitsItems = require('./controllers/updatePortraitsItems.js');
 
@@ -325,10 +354,9 @@ app.get('/dashboard/portraits', requireAuth, (req, res) => {
 });
 
 
-// Import necessary middleware and functions for Color
+// Import necessary middleware and functions for Products
 const uploadProducts = require('./middleware/productsUpload');
 const updateProductsItems = require('./controllers/updateProductsItems.js');
-const { strict } = require('assert');
 
 app.get('/dashboard/products', requireAuth, (req, res) => {
     const filePath = path.join(__dirname, 'data', 'products.json');
@@ -338,7 +366,7 @@ app.get('/dashboard/products', requireAuth, (req, res) => {
 });
 
 
-// Color Add item route
+// Products Add item route
 app.post('/dashboard/products/add-item', requireAuth, uploadProducts.fields([
     { name: 'image', maxCount: 1 },
 ]), (req, res) => {
@@ -421,10 +449,118 @@ app.post('/dashboard/products/remove-item', requireAuth, (req, res) => {
 
 
 
+// Import necessary middleware and functions for studio
+const uploadStudio = require('./middleware/studioUpload.js');
+const updateStudioItems = require('./controllers/updateStudioItems.js');
+
+app.get('/dashboard/studio', requireAuth, (req, res) => {
+    const filePath = path.join(__dirname, 'data', 'studio.json');
+    const itemsData = fs.readFileSync(filePath, 'utf8');
+    const items = JSON.parse(itemsData);
+    res.render('dashboardStudio', { items });
+});
+
+
+// studio Add item route
+app.post('/dashboard/studio/add-item', requireAuth, uploadStudio.fields([
+    { name: 'image', maxCount: 1 },
+]), (req, res) => {
+    // Calculate the next ID based on the existing items
+    const filePath = path.join(__dirname, 'data', 'studio.json');
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error reading JSON file');
+            return;
+        }
+
+        let items = JSON.parse(data);
+
+        // Calculate the next ID
+        let nextId = 1; // Default to 1 if there are no existing items
+        if (items.length > 0) {
+            const maxId = Math.max(...items.map(item => parseInt(item.id)));
+            nextId = maxId + 1;
+        }
+
+        // Retrieve the filenames of the uploaded files
+        const image = req.files['image'][0].filename;
+
+        // Create the new item object with the calculated ID and image URL
+        const newItem = {
+            id: nextId.toString(), // Convert to string to match existing IDs
+            url: `public/assets/studio/${image}`, // URL to the stored image
+        };
+
+        // Call the updateItems function to update the items with the new item data
+        updateStudioItems(newItem);
+
+        // Redirect to the appropriate page
+        res.redirect('/dashboard/studio');
+    });
+});
+
+// Remove Color item route
+app.post('/dashboard/studio/remove-item', requireAuth, (req, res) => {
+    const selectedItems = req.body.id;
+    const filePath = path.join(__dirname, 'data', 'studio.json');
+
+    console.log('Received Item IDs:', selectedItems);
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading JSON file:', err);
+            res.status(500).send('Error reading JSON file');
+            return;
+        }
+
+        let items = JSON.parse(data);
+
+        // Check if itemIds is an array before iterating
+        if (!Array.isArray(selectedItems)) {
+            console.error('Invalid request: Expected an array of item IDs');
+            res.status(400).send('Invalid request: Expected an array of item IDs');
+            return;
+        }
+
+        // Check if items is an array before performing operations
+        if (!Array.isArray(items)) {
+            console.error('JSON data is not an array');
+            res.status(500).send('JSON data is not an array');
+            return;
+        }
+
+        selectedItems.forEach(itemId => {
+            // Find the index of the item in the array based on the provided itemId
+            const itemIndex = items.findIndex(item => item.id === itemId);
+
+            if (itemIndex !== -1) {
+                // Remove the item from the array
+                items.splice(itemIndex, 1);
+            }
+        });
+
+        // Write the updated JSON data back to the file
+        fs.writeFile(filePath, JSON.stringify(items, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.error('Error writing to JSON file:', err);
+                res.status(500).send('Error writing to JSON file');
+                return;
+            }
+
+            // Redirect after writing the file successfully
+            res.redirect('/dashboard/studio');
+        });
+    });
+});
+
+app.get('*', (req, res) => {
+    res.render('error404')
+});
 
 
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('Server started on port 3000');
 });
 
