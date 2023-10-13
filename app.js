@@ -8,7 +8,7 @@ const app = express();
 const helmet = require('helmet');
 const bcrypt = require('bcrypt');
 
-
+app.set('trust proxy', true);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/public', express.static('public'));
@@ -76,6 +76,7 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.disable('x-powered-by')
+
 
 // Middleware to check authentication for protected routes
 function requireAuth(req, res, next) {
