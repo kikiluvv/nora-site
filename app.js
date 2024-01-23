@@ -560,7 +560,7 @@ app.get('/dashboard/help', requireAuth, (req, res) => {
 });
 
 app.get('/admin/tutorial', requireAuth, (req, res) => {
-    const videoPath = path.join(__dirname, 'admin', 'assets', 'tutorial4nora.mp4');
+    const videoPath = path.join(__dirname, 'admin', 'assets', 'tutorial4nora.mov');
     res.sendFile(videoPath);
 });
 
