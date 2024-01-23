@@ -42,7 +42,7 @@ app.use(
                 'https://localhost:3000',
                 'https://nora-dev.onrender.com/',
             ],
-            imgSrc: ["'self'", 'data:', 'https://modelviewer.dev'],
+            imgSrc: ["'self'", 'data:', 'https://modelviewer.dev', 'https://nora-dev.onrender.com/'],
             frameAncestors: ["'none'"],
         },
     }),
